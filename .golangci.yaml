@@ -1,0 +1,23 @@
+linters:
+  presets:
+    - bugs
+    - comment
+    - complexity
+    - error
+    # - import
+    - metalinter
+    # - module
+    - performance
+    - sql
+    # - style
+    - test
+    - unused
+  # disable:
+  #   - depguard
+  #   - wsl
+  #   - gci
+  #   - gofmt
+  #   - goimports
+  #   - whitespace
+  #   - gocritic
+  #   - goheader

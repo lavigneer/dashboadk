@@ -1,0 +1,58 @@
+package web
+
+import (
+	"fmt"
+	v1 "k8s.io/api/core/v1"
+)
+
+templ NodesList(nodes *v1.NodeList) {
+	@Base() {
+		<table>
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Labels</th>
+					<th>Ready</th>
+					<th>CPU Requests (cores)</th>
+					<th>CPU Limits (cores)</th>
+					<th>CPU Capacity (cores)</th>
+					<th>Memory Requsts (bytes)</th>
+					<th>Memory Limits (bytes)</th>
+					<th>Memory Capacity (bytes)</th>
+					<th>Pods</th>
+					<th>Created</th>
+				</tr>
+			</thead>
+			<tbody>
+				for _, node := range nodes.Items {
+					<tr>
+						<td>{ node.Name }</td>
+						<td>
+							for k, v := range node.GetLabels() {
+								<div class="rounded-full bg-gray-600 text-white px-3 py-1 m-1 float-start">
+									{ k }: { v }
+								</div>
+							}
+						</td>
+						<td>
+							for _, condition := range node.Status.Conditions {
+								if condition.Type == "Ready" {
+									{ string(condition.Status) }
+									{{ break }}
+								}
+							}
+						</td>
+						<td></td>
+						<td></td>
+						<td>{ fmt.Sprintf("%v", node.Status.Capacity.Cpu().String()) }</td>
+						<td></td>
+						<td></td>
+						<td>{ fmt.Sprintf("%v", node.Status.Capacity.Memory().String()) }</td>
+						<td></td>
+						<td>{ node.CreationTimestamp.String() }</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	}
+}

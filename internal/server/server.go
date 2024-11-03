@@ -7,23 +7,30 @@ import (
 	"strconv"
 	"time"
 
+	"dashboardk/internal/config"
+
 	_ "github.com/joho/godotenv/autoload"
 )
 
 type Server struct {
-	port int
+	app    *config.Application
+	port   int
+	appEnv string
 }
 
-func NewServer() *http.Server {
+func NewServer(app *config.Application) *http.Server {
+	appEnv := os.Getenv("APP_ENV")
 	port, _ := strconv.Atoi(os.Getenv("PORT"))
 	NewServer := &Server{
-		port: port,
+		port:   port,
+		app:    app,
+		appEnv: appEnv,
 	}
 
 	// Declare Server config
 	server := &http.Server{
 		Addr:         fmt.Sprintf(":%d", NewServer.port),
-		Handler:      NewServer.RegisterRoutes(),
+		Handler:      NewServer.RegisterRoutes(app),
 		IdleTimeout:  time.Minute,
 		ReadTimeout:  10 * time.Second,
 		WriteTimeout: 30 * time.Second,

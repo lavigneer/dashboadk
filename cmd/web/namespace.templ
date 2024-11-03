@@ -1,0 +1,13 @@
+package web
+
+import v1 "k8s.io/api/core/v1"
+
+templ NamespacesList(namespaces *v1.NamespaceList) {
+	@Base() {
+		<ul>
+			for _, namespace := range namespaces.Items {
+				<li>{ namespace.Name }</li>
+			}
+		</ul>
+	}
+}

@@ -1,16 +1,31 @@
 package web
 
+import (
+	"context"
+	"dashboardk/internal/config"
+)
+
+func GetAppEnv(ctx context.Context) string {
+	if appEnv, ok := ctx.Value(config.AppEnvContextClass).(string); ok {
+		return appEnv
+	}
+	return ""
+}
+
 templ Base() {
 	<!DOCTYPE html>
 	<html lang="en" class="h-screen">
 		<head>
 			<meta charset="utf-8"/>
-			<title>Go Blueprint Hello</title>
+			<title>DashboardK</title>
 			<link href="assets/css/output.css" rel="stylesheet"/>
 			<script src="assets/js/htmx.min.js"></script>
+			if GetAppEnv(ctx) == "local" {
+				<script src="__dev/reload.js"></script>
+			}
 		</head>
 		<body class="bg-gray-100">
-			<main class="max-w-sm mx-auto p-4">
+			<main class=" p-4">
 				{ children... }
 			</main>
 		</body>
