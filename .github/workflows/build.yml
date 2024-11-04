@@ -1,4 +1,4 @@
-name: Go-test
+name: Build
 on: [push, pull_request]
 
 jobs:
@@ -24,6 +24,14 @@ jobs:
         
       - name: Golangci-lint
         uses: golangci/golangci-lint-action@v6.1.1
+
+      - name: Setup Biome CLI
+        uses: biomejs/setup-biome@v2
+        with:
+            version: 1.9.4
+
+      - name: Run Biome
+        run: biome ci
 
       - name: Test with the Go CLI
         run: go test ./... 
