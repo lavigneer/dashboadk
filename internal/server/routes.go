@@ -7,7 +7,6 @@ import (
 	"dashboardk/internal/config"
 	"dashboardk/internal/handlers"
 	"dashboardk/internal/services"
-	"dashboardk/pkg/reload"
 )
 
 func (s *Server) RegisterRoutes(app *config.Application) http.Handler {
@@ -15,8 +14,7 @@ func (s *Server) RegisterRoutes(app *config.Application) http.Handler {
 	fileServer := http.FileServer(http.FS(web.Files))
 	mux.Handle("/assets/", fileServer)
 
-	pageReloader := reload.New("/__dev/")
-	pageReloader.RegisterRoutes(mux)
+	mux.Handle(app.PageReloader.Path, app.PageReloader)
 
 	nodeService := services.NewNodeService(app)
 	nodeHandler := handlers.NewNodeHandler(app, nodeService)

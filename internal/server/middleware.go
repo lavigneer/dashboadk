@@ -24,7 +24,7 @@ func (s *Server) logMiddleware(next http.Handler) http.Handler {
 
 func (s *Server) appEnvMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		ctx := context.WithValue(r.Context(), config.AppEnvContextClass, s.appEnv)
+		ctx := context.WithValue(r.Context(), config.AppContextClass, s.app)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }

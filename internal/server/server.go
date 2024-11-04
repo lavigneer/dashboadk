@@ -13,18 +13,15 @@ import (
 )
 
 type Server struct {
-	app    *config.Application
-	port   int
-	appEnv string
+	app  *config.Application
+	port int
 }
 
 func NewServer(app *config.Application) *http.Server {
-	appEnv := os.Getenv("APP_ENV")
 	port, _ := strconv.Atoi(os.Getenv("PORT"))
 	NewServer := &Server{
-		port:   port,
-		app:    app,
-		appEnv: appEnv,
+		port: port,
+		app:  app,
 	}
 
 	// Declare Server config

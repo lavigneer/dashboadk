@@ -15,6 +15,7 @@ import (
 	"dashboardk/internal/config"
 	"dashboardk/internal/server"
 
+	autorefresh "github.com/lavigneer/browser-autorefresh"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/clientcmd"
 	"k8s.io/client-go/util/homedir"
@@ -68,9 +69,21 @@ func createClientSet() *kubernetes.Clientset {
 }
 
 func main() {
+	logger := slog.New(slog.NewTextHandler(os.Stdout, nil))
+	appEnv := os.Getenv("APP_ENV")
+	var pageReloader *autorefresh.PageReloader
+	if appEnv == "local" {
+		var err error
+		pageReloader, err = autorefresh.New(nil, "/__dev__/reload", 100)
+		if err != nil {
+			logger.Error("could not set up autorefresh page reloader", "error", err)
+		}
+	}
 	app := &config.Application{
-		Logger:    slog.New(slog.NewTextHandler(os.Stdout, nil)),
-		ClientSet: createClientSet(),
+		Logger:       logger,
+		ClientSet:    createClientSet(),
+		Env:          os.Getenv("APP_ENV"),
+		PageReloader: pageReloader,
 	}
 	server := server.NewServer(app)
 

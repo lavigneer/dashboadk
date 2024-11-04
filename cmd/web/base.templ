@@ -2,14 +2,22 @@ package web
 
 import (
 	"context"
+	"html/template"
 	"dashboardk/internal/config"
 )
 
 func GetAppEnv(ctx context.Context) string {
-	if appEnv, ok := ctx.Value(config.AppEnvContextClass).(string); ok {
-		return appEnv
+	if app, ok := ctx.Value(config.AppContextClass).(*config.Application); ok {
+		return app.Env
 	}
 	return ""
+}
+
+func GetAppPageReloader(ctx context.Context) *template.Template {
+	if app, ok := ctx.Value(config.AppContextClass).(*config.Application); ok {
+		return app.PageReloader.Template
+	}
+	return nil
 }
 
 templ Base() {
@@ -21,7 +29,10 @@ templ Base() {
 			<link href="assets/css/output.css" rel="stylesheet"/>
 			<script src="assets/js/htmx.min.js"></script>
 			if GetAppEnv(ctx) == "local" {
-				<script src="__dev/reload.js"></script>
+				{{ pageReloader := GetAppPageReloader(ctx) }}
+				if pageReloader != nil {
+					@templ.FromGoHTML(pageReloader, nil)
+				}
 			}
 		</head>
 		<body class="bg-gray-100">

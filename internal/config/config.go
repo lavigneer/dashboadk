@@ -3,14 +3,17 @@ package config
 import (
 	"log/slog"
 
+	autorefresh "github.com/lavigneer/browser-autorefresh"
 	"k8s.io/client-go/kubernetes"
 )
 
 type Application struct {
-	Logger *slog.Logger
-	ClientSet *kubernetes.Clientset
+	Logger       *slog.Logger
+	ClientSet    *kubernetes.Clientset
+	PageReloader *autorefresh.PageReloader
+	Env          string
 }
 
-type appEnvContextKey string
+type appContextKey string
 
-var AppEnvContextClass = appEnvContextKey("appEnv")
+var AppContextClass = appContextKey("appContext")
