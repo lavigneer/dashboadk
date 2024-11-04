@@ -4,20 +4,12 @@ linters:
     - comment
     - complexity
     - error
-    # - import
     - metalinter
-    # - module
     - performance
     - sql
-    # - style
     - test
     - unused
-  # disable:
-  #   - depguard
-  #   - wsl
-  #   - gci
-  #   - gofmt
-  #   - goimports
-  #   - whitespace
-  #   - gocritic
-  #   - goheader
+  disable:
+    - contextcheck
+    - exhaustruct
+    - wrapcheck

@@ -35,5 +35,10 @@ func (h *NodeHandler) Get(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "failed to get nodes", http.StatusInternalServerError)
 		return
 	}
-	web.NodesList(nodes).Render(r.Context(), w)
+	err = web.NodesList(nodes).Render(r.Context(), w)
+	if err != nil {
+		h.app.Logger.Error("failed to render nodes", slog.Any("error", err))
+		http.Error(w, "failed to render nodes", http.StatusInternalServerError)
+		return
+	}
 }

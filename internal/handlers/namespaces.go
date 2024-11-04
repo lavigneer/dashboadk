@@ -31,9 +31,14 @@ func (h *NamespaceHandler) RegisterRoutes(mux *http.ServeMux) {
 func (h *NamespaceHandler) Get(w http.ResponseWriter, r *http.Request) {
 	nodes, err := h.namespaceService.GetAll(r.Context())
 	if err != nil {
-		h.app.Logger.Error("failed to get nodes", slog.Any("error", err))
-		http.Error(w, "failed to get nodes", http.StatusInternalServerError)
+		h.app.Logger.Error("failed to get namespaces", slog.Any("error", err))
+		http.Error(w, "failed to get namespaces", http.StatusInternalServerError)
 		return
 	}
-	web.NamespacesList(nodes).Render(r.Context(), w)
+	err = web.NamespacesList(nodes).Render(r.Context(), w)
+	if err != nil {
+		h.app.Logger.Error("failed to render namespaces", slog.Any("error", err))
+		http.Error(w, "failed to render namespaces", http.StatusInternalServerError)
+		return
+	}
 }

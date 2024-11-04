@@ -19,7 +19,6 @@ type NodeService struct {
 }
 
 func (n *NodeService) GetAll(ctx context.Context) (*v1.NodeList, error) {
-	n.app.ClientSet.CoreV1().Pods("").List(ctx, metav1.ListOptions{})
 	return n.app.ClientSet.CoreV1().Nodes().List(ctx, metav1.ListOptions{})
 }
 

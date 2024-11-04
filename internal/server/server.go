@@ -9,6 +9,7 @@ import (
 
 	"dashboardk/internal/config"
 
+	// Autoload .env.
 	_ "github.com/joho/godotenv/autoload"
 )
 
