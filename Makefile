@@ -1,5 +1,13 @@
 # Simple Makefile for a Go project
 
+ifdef CI
+	BIOME_FLAGS=
+	GOLANGCI_LINT_FLAGS=
+else
+	BIOME_FLAGS="--fix"
+	GOLANGCI_LINT_FLAGS="--fix"
+endif
+
 # Build the application
 all: build test
 templ-install:
@@ -20,6 +28,10 @@ tailwind:
 	@if [ ! -f tailwindcss ]; then curl -sL https://github.com/tailwindlabs/tailwindcss/releases/latest/download/tailwindcss-linux-x64 -o tailwindcss; fi
 	
 	@chmod +x tailwindcss
+biome:
+	@if [ ! -f biome ]; then curl -sL https://github.com/biomejs/biome/releases/latest/download/biome-linux-x64  -o biome; fi
+	
+	@chmod +x biome
 
 build: tailwind templ-install
 	@echo "Building..."
@@ -52,6 +64,17 @@ docker-down:
 test:
 	@echo "Testing..."
 	@go test ./... -v
+
+# Test the application
+lint: biome
+	@echo "Linting..."
+	@./biome lint . $(BIOME_FLAGS)
+	@golangci-lint run $(GOLANGCI_LINT_FLAGS)
+
+format: biome
+	@echo "Formatting..."
+	@./biome format $(BIOME_FLAGS)
+	@golangci-lint run --no-config --disable-all --enable gofmt $(GOLANGCI_LINT_FLAGS)
 
 # Clean the binary
 clean:
